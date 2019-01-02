@@ -1,0 +1,148 @@
+@import url('https://fonts.googleapis.com/css?family=Amita|Thasadith');
+
+@media only screen and (max-widht: 600px) {
+  #form {
+    width: 100%;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Thasadith', sans-serif;
+  background-color: #EEEEEE;
+  font-size: 16px;
+}
+
+h1, h2 {
+  font-family: 'Amita', cursive;
+  text-align: center;
+}
+
+#nav-bar { 
+  top: 0; 
+  width: 100%; 
+  list-style: none;
+  text-align: center;
+  position: fixed;
+  padding: 0;
+  margin: 0;  
+}
+
+#nav-bar ul {
+  list-style: none;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  width: auto;
+}
+
+#nav-bar li {
+  font-family: 'Amita', cursive;
+  font-size: 1.0em;
+  line-height: 40px;
+  height: 40px;
+  border-bottom: 1px solid #888;
+}
+ 
+#nav-bar a {
+  text-decoration: none;
+  color: black;
+  display: block;
+  background-color: white;
+  overflow: hidden;
+  border-radius: 5px;
+}
+   
+@media screen and (min-width: 600px) {
+  #nav-bar li{
+    width: auto;
+    border-bottom: none;
+    height: 50px;
+    line-height: 50px;
+    font-size: 1.4em;
+  }
+ 
+  #nav-bar li {
+    display: inline-block;
+  }
+
+#header-img {
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+hr { 
+  height: 30px; 
+  border-style: solid; 
+  border-color: #8c8b8b; 
+  border-width: 1px 0 0 0; 
+  border-radius: 20px; 
+} 
+
+#mission {
+  text-align: center;
+}
+
+#testimonials {
+  text-align: justify;
+}
+
+#testimonials-list {
+  display: flex;
+  flex-direction: column;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+}
+
+#video {
+  margin-top: 20px;
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+}
+
+iframe {
+    max-width: 560px;
+    width: 100%; 
+}
+
+#subscribe {
+  text-align: center;
+}
+
+#submit {
+  max-width: 150px;
+  width: 100%;
+  height: 30px;
+  margin: 15px 0;
+  border: 0;
+  background-color: #f1c40f;
+  border-radius: 5px;
+}
+
+#submit:hover {
+  background-color: yellow;
+  transition: background-color 1s;
+}
+
+#email {
+  max-width: 275px;
+  width: 100%;
+  padding: 5px;
+  border-radius: 5px;
+  border: 0;
+}
+  
+
+
+
+
+    
+    
+
+
