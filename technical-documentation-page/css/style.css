@@ -1,0 +1,142 @@
+/****** fonts ******/
+@import url('https://fonts.googleapis.com/css?family=Lemonada|Montserrat');
+
+
+body {
+  background-color: white;
+  font: normal normal 1.0em/1 'Montserrat', sans-   serif;
+}
+
+code {
+  display: block;
+  text-align: left;
+  white-space: pre;
+  position: relative;
+  word-break: normal;
+  word-wrap: normal;
+  line-height: 1;
+  background-color: #f7f7f7;
+  padding: 0px;
+  margin: 0px;
+  border-radius: 10px;
+  font-size: 0.93em; 
+}
+
+header {
+  font: normal bold 1.8em/1 'Lemonada', cursive;
+  text-align: center;
+  margin-top: 20px;
+}
+
+hr {
+  width: 80%;
+  height: 5px;
+  background-color: black;
+  border-radius: 5px;
+}
+
+/****** classes ******/
+.navbar {
+  position: fixed;
+  min-width: 200px;
+  top: 0px;
+  left: 0px;
+  width: 10px;
+  height: 100%;
+  background-color: white;
+  border-right: solid;
+}
+
+.navbar ul {
+  height: 50%;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.navbar a {
+  color: black;
+  text-decoration: none;
+}
+
+.navbar a:hover {
+  color: orange;
+}
+ 
+.navbar li {
+  border: 1px solid;
+  padding: 5px;
+  padding-left: 35px;
+  list-style: none;
+  position: relative;
+  left: -40px;
+  width: 100%;
+}
+
+.main-doc {
+  position: relative;
+  margin-left: 220px;
+  padding:20px;
+  text-align: justify;
+  
+}
+
+/****** media query ******/
+@media only screen and (max-width: 800px) {
+  
+  code {
+    font-size: 0.9em;
+  }
+ 
+  .navbar {
+     background-color: white;     
+     position: absolute;
+     top: 0;
+     padding: 0;
+     margin: 0;
+     width: 100%;
+     max-height: 232px;
+     border: none;
+     border-bottom: 1px solid;
+   }
+  
+  .navbar ul {
+    border: 1px solid;
+    height: 168px;
+  }
+  
+  .navbar li {
+    border: 1px solid;
+    padding: 5px;
+    padding-left: 35px;
+    list-style: none;
+    position: relative;
+    left: -40px;
+    width: 100%;
+  }
+  
+  .main-doc {
+    position: relative;
+    margin-left: 0px;
+    margin-top: 270px;
+    padding: 20px;
+    text-align: justify;
+  }
+  
+}
+
+@media only screen and (max-width: 400px) {
+  
+  code {
+    margin-left: 0px;
+    width: 100%;
+    padding: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
+    min-width: 133px;
+    font-size: 0.8em;
+  }
+  
+  .main-doc {
+    margin-left: -10px;
+  }
+}
