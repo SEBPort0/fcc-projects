@@ -1,0 +1,41 @@
+main {
+  background-color: #DAD870;
+  height: 100vh;
+  padding: 150px 150px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 10px;
+}
+
+.buttons > #new-quote {
+   color: black; 
+   background: #FF9636; 
+   border: 2px solid #0099CC;
+   border-radius: 6px; 
+}
+
+.buttons > #new-quote:hover {
+  background-color: #008CBA;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border: 5px solid #ffcc5c;
+  border-radius: 5px;
+  background-color: #ffcc5c;
+}
+
+.container > #text {
+  font-family: 'Pacifico', cursive;
+}
+
+.container > #author {
+  font-family: 'Open Sans', sans-serif;
+}
+
