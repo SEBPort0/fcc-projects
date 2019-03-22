@@ -7,7 +7,7 @@
 
 - Use of marked library.
 
-- How to display text from a textarea element on the screen.
+- Display text from a textarea element on the screen.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
