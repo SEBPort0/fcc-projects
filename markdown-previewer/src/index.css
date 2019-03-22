@@ -1,0 +1,41 @@
+#root {
+  background-color: #647C90;
+}
+
+#editor {
+  width: 500px;
+	height: 200px;
+	border: 5px solid #746C70;
+  border-radius: 7px;
+  background-color: #E2DED0;
+	padding: 10px 10px 10px 10px;
+	font-family: Tahoma, sans-serif;
+  resize: vertical;
+  display: block;
+  margin-left: auto;
+  margin-right: auto; 
+}
+
+#preview {
+  width: 700px;
+	height: auto;
+	border: 5px solid #746C70;
+  border-radius: 7px;
+  background-color: #E2DED0;
+	padding: 10px;
+	font-family: Tahoma, sans-serif;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.5em;
+}
+
+h1, h2 {
+  border-bottom: 2px solid #757575;
+}
+
+.footer {
+  font-family: Tahoma, sans-serif;
+  display: flex;
+  justify-content: center;
+}
