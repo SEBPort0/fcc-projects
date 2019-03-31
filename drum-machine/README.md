@@ -1,4 +1,4 @@
-# Markdown previewer 
+# Drum Machine
 
 [Curriculum](https://learn.freecodecamp.org/front-end-libraries/front-end-libraries-projects/build-a-drum-machine)
 
