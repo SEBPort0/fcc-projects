@@ -22,14 +22,14 @@ class Keyboard extends React.Component {
 							0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
 					 		10, 11, 12, 13, 14, 15, 16
 		];
-		this.symbols = [	"0", "1", "2", "3", "4", "5",
-							"6", "7", "8", "9", "=",
-							"+", "-", "*", "/", 
+		this.symbols = [	"+", "-", "*", "/",
+							"0", "1", "2", "3", "4", "5",
+							"6", "7", "8", "9", "=", 
 							".", "AC"
 		];
-		this.ids = [	"zero", "one", "two", "three", "four", "five",
+		this.ids = [	"add", "subtract", "multiply", "divide",
+						"zero", "one", "two", "three", "four", "five",
 						"six", "seven", "eight", "nine", "equals",
-						"add", "subtract", "multiply", "divide",
 						"decimal", "clear"
 		];
 		this.keys = this.numbers.map(num => 
@@ -58,8 +58,10 @@ function Display(props) {
 			id="display"
 			className="display"
 		>
-			{props.formula}
-			{props.ans}
+			<div className="display-formula">
+				{props.formula}
+			</div>
+			{props.current}
 		</div>
 	);
 }
@@ -72,7 +74,7 @@ class Calculator extends React.Component {
 		this.handleDecimal = this.handleDecimal.bind(this);
 		this.state = {	current: "0",
 					  	formula: "",
-						ans: 0,
+						ans: "",
 						lastClicked: ""
 		};
 	}
@@ -84,25 +86,28 @@ class Calculator extends React.Component {
 		const operators = [	"add", "subtract", "multiply", "divide"	];
 		const {id, value} = event.target;
 
+		this.setState(prevState => ({ current: value }));
 		if(id === "clear") {
 			this.handleClear();
 		} else if(id === "equals") {
 			this.setState({ ans: eval(this.state.formula) });
 			this.setState({ formula: "" });
+			this.setState(prevState => ({ current: prevState.ans }));
 		} else if(id === "decimal") {
 			this.handleDecimal();
 		} else {
 			this.setState(prevState => ({ formula: 
 				prevState.formula + value }));
 		}
-		this.setState({ lastClicked: value })
+		this.setState({ lastClicked: value });
+
 	}
 
 	handleClear() {
 		this.setState({ current: "0",
 					  	formula: "",
-						ans: 0,
-						lastClicked: "", 
+						ans: "",
+						lastClicked: ""
 		});
 	}
 
@@ -114,7 +119,7 @@ class Calculator extends React.Component {
 		return(
 			<div className="calculator">
 				<Display 
-					ans={this.state.ans}
+					current={this.state.current}
 					formula={this.state.formula}
 				/>
 				<Keyboard handleClick={this.handleClick}/>
