@@ -71,6 +71,7 @@ class Calculator extends React.Component {
 		super(props);
 		this.handleClick = this.handleClick.bind(this);
 		this.handleClear = this.handleClear.bind(this);
+		this.handleEquals = this.handleEquals.bind(this);
 		this.handleDecimal = this.handleDecimal.bind(this);
 		this.state = {	current: "0",
 					  	formula: "",
@@ -80,34 +81,37 @@ class Calculator extends React.Component {
 	}
 
 	handleClick(event) {
-		const numbers = [	"one", "two", "three", "four", "five",
-							"six", "seven", "eight", "nine", "zero"
-		];
-		const operators = [	"add", "subtract", "multiply", "divide"	];
 		const {id, value} = event.target;
 
-		this.setState(prevState => ({ current: value }));
 		if(id === "clear") {
 			this.handleClear();
 		} else if(id === "equals") {
-			this.setState({ ans: eval(this.state.formula) });
-			this.setState({ formula: "" });
-			this.setState(prevState => ({ current: prevState.ans }));
-		} else if(id === "decimal") {
-			this.handleDecimal();
+			this.handleEquals();
 		} else {
-			this.setState(prevState => ({ formula: 
-				prevState.formula + value }));
+			this.setState(prevState => ({ 
+				current: value,
+				formula: prevState.formula + value,
+				ans: prevState.ans, 
+				lastClicked: id
+			}));
 		}
-		this.setState({ lastClicked: value });
-
 	}
 
 	handleClear() {
 		this.setState({ current: "0",
 					  	formula: "",
 						ans: "",
-						lastClicked: ""
+						lastClicked: "clear"
+		});
+	}
+
+	handleEquals() {
+		const answer = String(eval(this.state.formula));
+
+		this.setState({ current: answer,
+						formula: answer,
+						ans: answer,
+						lastClicked: "equals"
 		});
 	}
 
@@ -119,8 +123,8 @@ class Calculator extends React.Component {
 		return(
 			<div className="calculator">
 				<Display 
-					current={this.state.current}
 					formula={this.state.formula}
+					current={this.state.current}	
 				/>
 				<Keyboard handleClick={this.handleClick}/>
 			</div>
