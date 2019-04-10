@@ -58,10 +58,7 @@ function Display(props) {
 			id="display"
 			className="display"
 		>
-			<div className="display-formula">
-				{props.formula}
-			</div>
-			{props.current}
+		  {props.current}
 		</div>
 	);
 }
@@ -72,28 +69,48 @@ class Calculator extends React.Component {
 		this.handleClick = this.handleClick.bind(this);
 		this.handleClear = this.handleClear.bind(this);
 		this.handleEquals = this.handleEquals.bind(this);
+		this.handleOperators = this.handleOperators.bind(this);
 		this.handleDecimal = this.handleDecimal.bind(this);
 		this.state = {	current: "0",
 					  	formula: "",
 						ans: "",
-						lastClicked: ""
+						lastClicked: "",
+						decimal: false
 		};
 	}
 
 	handleClick(event) {
 		const {id, value} = event.target;
+		const operators = ["add", "subtract", "multiply", "divide"];
 
 		if(id === "clear") {
 			this.handleClear();
 		} else if(id === "equals") {
 			this.handleEquals();
+		// two or more operators consecutively entered.
+		} else if(operators.includes(this.state.lastClicked) 
+				&& operators.includes(id)) {
+			this.handleOperators(this.state.lastClicked, id);
+		} else if(id === "decimal") {
+			if(!this.state.decimal) {
+				this.setState(prevState => ({ 
+					current: prevState.current + value,
+					formula: prevState.formula + value,
+					lastClicked: "decimal",
+					decimal: true 
+				}));
+			}
 		} else {
 			this.setState(prevState => ({ 
-				current: value,
+				current: (prevState.current === "0" ? 
+					value : prevState.current + value),
 				formula: prevState.formula + value,
 				ans: prevState.ans, 
 				lastClicked: id
 			}));
+			if(operators.includes(id)) {
+				this.setState({ decimal: false});
+			}
 		}
 	}
 
@@ -101,7 +118,8 @@ class Calculator extends React.Component {
 		this.setState({ current: "0",
 					  	formula: "",
 						ans: "",
-						lastClicked: "clear"
+						lastClicked: "clear",
+						decimal: false
 		});
 	}
 
@@ -111,7 +129,26 @@ class Calculator extends React.Component {
 		this.setState({ current: answer,
 						formula: answer,
 						ans: answer,
-						lastClicked: "equals"
+						lastClicked: "equals",
+						decimal: false
+		});
+	}
+
+	handleOperators(lastClicked, id) {
+		// not the best way.
+		const operators = {	add: "+", 
+							subtract: "-",
+							multiply: "*",
+							divide: "/"
+
+		};
+		const newFormula = this.state.formula.replace(
+			operators[lastClicked], operators[id]);
+
+		this.setState({ formula: newFormula,
+						current: newFormula,
+						lastClicked: id,
+						decimal: false
 		});
 	}
 
@@ -122,10 +159,7 @@ class Calculator extends React.Component {
 	render() {
 		return(
 			<div className="calculator">
-				<Display 
-					formula={this.state.formula}
-					current={this.state.current}	
-				/>
+				<Display current={this.state.current} />
 				<Keyboard handleClick={this.handleClick}/>
 			</div>
 		);
