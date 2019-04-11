@@ -97,5 +97,13 @@ button:hover {
 	padding: 0px;
 }
 
+.sebport0-signature {
+	position: absolute;
+	top: 95%;
+	left: 50%;
+	font-size: 1.5em;
+}
+
+
 /* Thanks to Ayo Isaiah for the amazing grid-tutorial:
    		https://freshman.tech/css-grid-calculator */
