@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import './index.css'
 
 class Calculator extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.handleClick = this.handleClick.bind(this)
     this.handleClear = this.handleClear.bind(this)
@@ -16,29 +16,22 @@ class Calculator extends React.Component {
       lastClicked: '',
       decimal: false
     }
+    this.operators = ['add', 'subtract', 'multiply', 'divide']
   }
 
-  handleClick (event) {
+  handleClick(event) {
     const { id, value } = event.target
-    const operators = ['add', 'subtract', 'multiply', 'divide']
-
+    
     if (id === 'clear') {
       this.handleClear()
     } else if (id === 'equals') {
-      this.handleEquals()
-      // two or more operators consecutively entered.
-    } else if (operators.includes(this.state.lastClicked) &&
-        operators.includes(id)) {
+      this.handleEquals(value)
+    // two or more operators consecutively entered.
+    } else if (this.operators.includes(this.state.lastClicked) &&
+        this.operators.includes(id)) {
       this.handleOperators(this.state.lastClicked, id)
     } else if (id === 'decimal') {
-      if (!this.state.decimal) {
-        this.setState(prevState => ({
-          current: prevState.current + value,
-          formula: prevState.formula + value,
-          lastClicked: 'decimal',
-          decimal: true
-        }))
-      }
+    	this.handleDecimal(value);
     } else {
       this.setState(prevState => ({
         current: (prevState.current === '0'
@@ -47,13 +40,13 @@ class Calculator extends React.Component {
         ans: prevState.ans,
         lastClicked: id
       }))
-      if (operators.includes(id)) {
+      if (this.operators.includes(id)) {
         this.setState({ decimal: false })
       }
     }
   }
 
-  handleClear () {
+  handleClear() {
     this.setState({ current: '0',
       formula: '',
       ans: '',
@@ -62,9 +55,11 @@ class Calculator extends React.Component {
     })
   }
 
-  handleEquals () {
-    const answer = String(eval(this.state.formula))
-
+  handleEquals(value) {
+  	// e.g.: 2+ -> 2 
+    const answer = this.operators.includes(this.state.lastClicked) ? 
+			this.state.current[0] : String(eval(this.state.formula))
+			
     this.setState({ current: answer,
       formula: answer,
       ans: answer,
@@ -73,13 +68,12 @@ class Calculator extends React.Component {
     })
   }
 
-  handleOperators (lastClicked, id) {
+  handleOperators(lastClicked, id) {
     // not the best way.
     const operators = { add: '+',
       subtract: '-',
       multiply: '*',
       divide: '/'
-
     }
     const newFormula = this.state.formula.replace(
       operators[lastClicked], operators[id])
@@ -91,15 +85,25 @@ class Calculator extends React.Component {
     })
   }
 
-  handleDecimal () {
-    return undefined
+  handleDecimal(value) {
+    if (!this.state.decimal) {
+        this.setState(prevState => ({
+          current: prevState.current + value,
+          formula: prevState.formula + value,
+          lastClicked: 'decimal',
+          decimal: true
+        }))
+      }
   }
 
-  render () {
+  render() {
     return (
       <div>
         <div className='calculator'>
-          <Display current={this.state.current} />
+          <Display 
+            current={this.state.current}
+            length={this.state.current.length}
+          />
           <Keyboard handleClick={this.handleClick} />
         </div>
 
@@ -109,7 +113,7 @@ class Calculator extends React.Component {
   }
 }
 
-function Key (props) {
+function Key(props) {
   return (
     <button
       type='button'
@@ -123,7 +127,7 @@ function Key (props) {
 }
 
 class Keyboard extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.numbers = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
       10, 11, 12, 13, 14, 15, 16
@@ -147,7 +151,7 @@ class Keyboard extends React.Component {
       />)
   }
 
-  render () {
+  render() {
     return (
       <div className='keyboard-container'>
         <div className='keyboard-keys'>
@@ -158,26 +162,25 @@ class Keyboard extends React.Component {
   }
 }
 
-function Display (props) {
-  return (
-    <div
-      id='display'
-      className='display'
-    >
-      {props.current}
-    </div>
-  )
+function Display(props) {
+	let show = (props.length <= 20) ? 
+	 ( <div id='display' className='display'>
+       {props.current}
+     </div> ) 
+    : 
+    ( <div id='display' className='display'>
+        MAX LENGTH REACHED
+      </div> )
+
+  return show
 }
 
-function Signature (props) {
+function Signature(props) {
   return (
     <footer className='sebport0-signature'>
         By <i className='fab fa-github' />
-      <a
-        href='https://github.com/sebport0'
-        target='_blank'
-      >
-            sebport0
+      <a href='https://github.com/sebport0' target='_blank'>
+        sebport0
       </a>
     </footer>
   )
