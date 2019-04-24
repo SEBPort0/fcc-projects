@@ -4,63 +4,90 @@ import ReactDOM from 'react-dom';
 class PomodoroClock extends React.Component {
   constructor(props) {
     super(props);
+    // sessionLength, breakLength and lengthModifier in minutes.
+    // sessionTimeLeft and breakTimeLeft [minutes, seconds].
     this.state = { sessionLength: 25,
                    breakLength: 5,
-                   lengthModifier: 1,
-                   timerRunning: false,
-                   timeLeft: '25:00'
+                   sessionRunning: false,
+                   breakRunning: false,
+                   sessionTimeLeft: '25:00',
+                   breakTimeLeft: '05:00'
     };
     this.handleClick = this.handleClick.bind(this);
+    this.changeTimerDuration = this.changeTimerDuration.bind(this);
+    this.reset = this.reset.bind(this);
   }
 
   handleClick(event) {
     const {id} = event.target;
     const maxDuration = 60;
     const minDuration = 1;
-    const increment = true;
+    const doIncrement = true;
 
     if (id === "session-increment") {
-      this.changeDuration('sessionLength', this.state.sessionLength, 
-        maxDuration, increment);
+      this.changeTimerDuration('sessionLength', this.state.sessionLength, 
+        maxDuration, doIncrement);
     } else if (id === "session-decrement") {
-      this.changeDuration('sessionLength', this.state.sessionLength, 
-        minDuration, !increment);
+      this.changeTimerDuration('sessionLength', this.state.sessionLength, 
+        minDuration, !doIncrement);
     } else if (id === "break-increment") {
-      this.changeDuration('breakLength', this.state.breakLength, 
-        maxDuration, increment);
+      this.changeTimerDuration('breakLength', this.state.breakLength, 
+        maxDuration, doIncrement);
     } else if (id === "break-decrement") {
-      this.changeDuration('breakLength', this.state.breakLength,
-        minDuration, !increment);
+      this.changeTimerDuration('breakLength', this.state.breakLength,
+        minDuration, !doIncrement);
+    } else if (id === "start_stop") {
+      // start the timer.
+      let timer = setInterval(this.runTimer, 1000);
+
+      if (!this.state.sessionRunning) {
+        this.setState({ sessionRunning: true });
+      } else {
+        // stop the timer.
+        this.setState({ sessionRunning: false });
+        clearInterval(timer); 
+      }
     } else if (id === "reset") {
       this.reset();
     } 
   }
 
-  changeDuration(timerName, timerLength, limitLength, increment) {
+  changeTimerDuration(name, timerDuration, limit, doIncrement) {
     // Not clean. Same code, != conditionals. Verbose.
-    if (increment) {
-      timerLength < limitLength ?
+    const lengthModifier = doIncrement ? 1 : -1;
+
+    if (doIncrement) {
+      timerDuration < limit ?
         this.setState(prevState => 
-          ({ [timerName]: 
-            prevState[timerName] + prevState.lengthModifier }))
+          ({ [name]: 
+            prevState[name] + lengthModifier }))
         :
-        this.setState({ [timerName]: limitLength });
-    }
-    else {
-      timerLength > limitLength ?
+        this.setState({ [name]: limit });
+    } else {
+      timerDuration > limit ?
         this.setState(prevState => 
-          ({ [timerName]: 
-            prevState[timerName] - prevState.lengthModifier }))
+          ({ [name]: 
+            prevState[name] + lengthModifier }))
         :
-        this.setState({ [timerName]: limitLength });
+        this.setState({ [name]: limit });
     }
+    // update timeLefts in accord with sessionLength and breakLength.
+    this.setState(prevState => 
+      ({ sessionTimeLeft: prevState.sessionLength.toString() + ':00',
+         breakTimeLeft: prevState.breakLength.toString() + ':00' }));
+  }
+  
+  runTimer() {
+     return undefined;
   }
 
   reset() {
     this.setState({ sessionLength: 25,
-                      breakLength: 5,
-                      timerRunning: false,
-                      timeLeft: '25:00'
+                    breakLength: 5,
+                    sessionRunning: false,
+                    breakRunning: false,
+                    sessionTimeLeft: '25:00',
+                    breakTimeLeft: '5:00'
       });
   }
 
@@ -70,19 +97,14 @@ class PomodoroClock extends React.Component {
         <Display 
           sessionLength={this.state.sessionLength}
           breakLength={this.state.breakLength}
-          timeLeft={this.state.timeLeft}
+          sessionTimeLeft={this.state.sessionTimeLeft}
+          breakTimeLeft={this.state.breakTimeLeft}
           handleClick={this.handleClick}
         />
-        <Clock />
       </div>
     );
   }
-
 }
-
-function Clock(props) {
-  return null;
-} 
 
 function Display(props) {
   return (
@@ -104,11 +126,11 @@ function Display(props) {
       <div id="timer-label">
         Session
         <div id="time-left">
-          {props.timeLeft}
+          {props.sessionTimeLeft}
         </div>
       </div>
 
-      <div className="timer-buttons">
+      <div className="buttons-container">
         <button id="session-increment" onClick={props.handleClick}>
           session-increment
         </button>
