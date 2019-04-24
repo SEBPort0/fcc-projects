@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+let timer;
+
 class PomodoroClock extends React.Component {
   constructor(props) {
     super(props);
@@ -15,7 +17,11 @@ class PomodoroClock extends React.Component {
     };
     this.handleClick = this.handleClick.bind(this);
     this.changeTimerDuration = this.changeTimerDuration.bind(this);
-    this.reset = this.reset.bind(this);
+    this.restartTimer = this.restartTimer.bind(this);
+    this.runTimerSession = this.runTimerSession.bind(this);
+    this.stopTimerSession = this.stopTimerSession.bind(this);
+    this.runTimerBreak = this.runTimerBreak.bind(this);
+    this.stopTimerBreak = this.stopTimerBreak.bind(this);
   }
 
   handleClick(event) {
@@ -23,32 +29,36 @@ class PomodoroClock extends React.Component {
     const maxDuration = 60;
     const minDuration = 1;
     const doIncrement = true;
+    const sessionLength = this.state.sessionLength;
+    const breakLength = this.state.breakLength;
+    const sessionRunning = this.state.sessionRunning;
+    const breakRunning = this.state.breakRunning;
 
     if (id === "session-increment") {
-      this.changeTimerDuration('sessionLength', this.state.sessionLength, 
-        maxDuration, doIncrement);
+      this.changeTimerDuration('sessionLength', sessionLength, maxDuration, 
+        doIncrement);
     } else if (id === "session-decrement") {
-      this.changeTimerDuration('sessionLength', this.state.sessionLength, 
-        minDuration, !doIncrement);
+      this.changeTimerDuration('sessionLength', sessionLength, minDuration, 
+        !doIncrement);
     } else if (id === "break-increment") {
-      this.changeTimerDuration('breakLength', this.state.breakLength, 
-        maxDuration, doIncrement);
+      this.changeTimerDuration('breakLength', breakLength, maxDuration, 
+        doIncrement);
     } else if (id === "break-decrement") {
-      this.changeTimerDuration('breakLength', this.state.breakLength,
-        minDuration, !doIncrement);
+      this.changeTimerDuration('breakLength', breakLength, minDuration, 
+        !doIncrement);
     } else if (id === "start_stop") {
-      // start the timer.
-      let timer = setInterval(this.runTimer, 1000);
-
-      if (!this.state.sessionRunning) {
+      if (!sessionRunning && !breakRunning) {
         this.setState({ sessionRunning: true });
-      } else {
-        // stop the timer.
+        this.runTimerSession();
+      } else if (sessionRunning) {
         this.setState({ sessionRunning: false });
-        clearInterval(timer); 
+        this.stopTimerSession();
+      } else if (breakRunning) {
+        this.setState({ breakRunning: false});
+        this.stopTimerBreak();
       }
     } else if (id === "reset") {
-      this.reset();
+      this.restartTimer();
     } 
   }
 
@@ -77,11 +87,41 @@ class PomodoroClock extends React.Component {
          breakTimeLeft: prevState.breakLength.toString() + ':00' }));
   }
   
-  runTimer() {
-     return undefined;
+  runTimerSession() {
+    let minutes = this.state.sessionTimeLeft.split(':').map(n => Number(n))[0];
+    let seconds = this.state.sessionTimeLeft.split(':').map(n => Number(n))[1];
+
+    if (minutes >= 0 || seconds >= 0) {
+      seconds = (seconds - 1 < 0 ) ? 59 : seconds - 1;
+      console.log(seconds)
+      if (seconds === 0 && minutes > 0) {
+        minutes -= 1;
+      }
+      this.setState({ sessionTimeLeft: [minutes, seconds].join(':')});
+      timer = setTimeout(this.runTimerSession, 1000);
+    } else {
+      this.setState({ sessionRunning: false,
+                      breakRunning: true
+      });
+      clearTimeout(timer);
+    }
+
   }
 
-  reset() {
+  stopTimerSession() {
+    this.setState({ sessionRunning: false });
+    clearTimeout(timer);
+  }
+
+  stopTimerBreak() {
+    return undefined;
+  }
+
+  runTimerBreak() {
+    return undefined;
+  }
+
+  restartTimer() {
     this.setState({ sessionLength: 25,
                     breakLength: 5,
                     sessionRunning: false,
@@ -132,19 +172,19 @@ function Display(props) {
 
       <div className="buttons-container">
         <button id="session-increment" onClick={props.handleClick}>
-          session-increment
+          session increment
         </button>
         <button id="session-decrement" onClick={props.handleClick}>
-          session-decrement
+          session decrement
         </button>
         <button id="break-increment" onClick={props.handleClick}>
-          break-increment
+          break increment
         </button>
         <button id="break-decrement" onClick={props.handleClick}>
-          break-decrement
+          break decrement
         </button>
         <button id="start_stop" onClick={props.handleClick}>
-          start_stop
+          start/stop
         </button>
         <button id="reset" onClick={props.handleClick}>
           reset
