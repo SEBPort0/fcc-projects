@@ -8,12 +8,12 @@ class PomodoroClock extends React.Component {
     super(props);
     // sessionLength, breakLength and lengthModifier in minutes.
     // sessionTimeLeft and breakTimeLeft [minutes, seconds].
-    this.state = { sessionLength: 25,
-                   breakLength: 5,
+    this.state = { sessionLength: 1,
+                   breakLength: 1,
                    sessionRunning: false,
                    breakRunning: false,
-                   sessionTimeLeft: '25:00',
-                   breakTimeLeft: '05:00'
+                   sessionTimeLeft: '01:00',
+                   breakTimeLeft: '01:05'
     };
     this.handleClick = this.handleClick.bind(this);
     this.changeTimerDuration = this.changeTimerDuration.bind(this);
@@ -31,8 +31,6 @@ class PomodoroClock extends React.Component {
     const doIncrement = true;
     const sessionLength = this.state.sessionLength;
     const breakLength = this.state.breakLength;
-    const sessionRunning = this.state.sessionRunning;
-    const breakRunning = this.state.breakRunning;
 
     if (id === "session-increment") {
       this.changeTimerDuration('sessionLength', sessionLength, maxDuration, 
@@ -47,14 +45,12 @@ class PomodoroClock extends React.Component {
       this.changeTimerDuration('breakLength', breakLength, minDuration, 
         !doIncrement);
     } else if (id === "start_stop") {
-      if (!sessionRunning && !breakRunning) {
+      if (!this.state.sessionRunning && !this.state.breakRunning) {
         this.setState({ sessionRunning: true });
         this.runTimerSession();
-      } else if (sessionRunning) {
-        this.setState({ sessionRunning: false });
+      } else if (this.state.sessionRunning) {
         this.stopTimerSession();
-      } else if (breakRunning) {
-        this.setState({ breakRunning: false});
+      } else if (this.state.breakRunning) {
         this.stopTimerBreak();
       }
     } else if (id === "reset") {
@@ -65,6 +61,8 @@ class PomodoroClock extends React.Component {
   changeTimerDuration(name, timerDuration, limit, doIncrement) {
     // Not clean. Same code, != conditionals. Verbose.
     const lengthModifier = doIncrement ? 1 : -1;
+    // const timerRunning = name === 'sessionLength' ? 
+    //  this.state.sessionRunning : this.state.breakRunning;
 
     if (doIncrement) {
       timerDuration < limit ?
@@ -93,12 +91,24 @@ class PomodoroClock extends React.Component {
            prevState.breakLength.toString() + ':00' })
       );
   }
-  
+
+  // I should combine runTimerSession and runTimerBreak in one runTimer function.
+  // Same with stopTimerSession and stopTimerBreak.
   runTimerSession() {
+    // extract minutes and seconds from time left.
     let minutes = this.state.sessionTimeLeft.split(':').map(n => Number(n))[0];
     let seconds = this.state.sessionTimeLeft.split(':').map(n => Number(n))[1];
-
-    if (minutes >= 0) {
+    
+    // if neccesary restore break time left.
+    
+    // if 00:00 then stop the session timer and start the break.
+    if (minutes === 0 && seconds === 0) {
+      this.setState({ sessionRunning: false,
+                      breakRunning: true,
+                      sessionTimeLeft: '00:00'
+      });
+      this.runTimerBreak();
+    } else if (minutes >= 0) {
       // let the ternary operator attack begin!
       minutes = (seconds === 0) ? minutes - 1 : minutes;
       seconds = (seconds - 1 < 0 ) ? 59 : seconds - 1;
@@ -109,11 +119,32 @@ class PomodoroClock extends React.Component {
       let updatedTimeLeft = minutesString + ':' + secondsString;
       this.setState({ sessionTimeLeft: updatedTimeLeft });
       timer = setTimeout(this.runTimerSession, 1000);
-    } else {
-      this.setState({ sessionRunning: false,
-                      breakRunning: true
+    }
+  }
+
+  runTimerBreak() {
+    // extract minutes and seconds from time left.
+    let minutes = this.state.breakTimeLeft.split(':').map(n => Number(n))[0];
+    let seconds = this.state.breakTimeLeft.split(':').map(n => Number(n))[1];
+    
+    // if 00:00 then stop the break timer and start the session.
+    if (minutes === 0 && seconds === 0) {
+      this.setState({ sessionRunning: true,
+                      breakRunning: false,
+                      breakTimeLeft: '00:00'
       });
-      clearTimeout(timer);
+      this.runTimerSession();
+    } else if (minutes >= 0) {
+      // let the ternary operator attack begin!
+      minutes = (seconds === 0) ? minutes - 1 : minutes;
+      seconds = (seconds - 1 < 0 ) ? 59 : seconds - 1;
+      let secondsString = seconds < 10 ? '0' + seconds.toString() 
+        : seconds.toString();
+      let minutesString = minutes < 10 ? '0' + minutes.toString() 
+        : minutes.toString();
+      let updatedTimeLeft = minutesString + ':' + secondsString;
+      this.setState({ breakTimeLeft: updatedTimeLeft });
+      timer = setTimeout(this.runTimerBreak, 1000);
     }
   }
 
@@ -122,12 +153,10 @@ class PomodoroClock extends React.Component {
     clearTimeout(timer);
   }
 
-  runTimerBreak() {
-    return undefined;
-  }
 
   stopTimerBreak() {
-    return undefined;
+    this.setState({ breakRunning: false})
+    clearTimeout(timer);
   }
 
   restartTimer() {
@@ -156,6 +185,9 @@ class PomodoroClock extends React.Component {
 }
 
 function Display(props) {
+  let timerToDisplay = props.sessionTimeLeft === '00:00' ? 
+    props.breakTimeLeft : props.sessionTimeLeft;
+
   return (
     <div>
       <div id="session-label">
@@ -175,7 +207,7 @@ function Display(props) {
       <div id="timer-label">
         Session
         <div id="time-left">
-          {props.sessionTimeLeft}
+          {timerToDisplay}
         </div>
       </div>
 
