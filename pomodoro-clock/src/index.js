@@ -83,21 +83,31 @@ class PomodoroClock extends React.Component {
     }
     // update timeLefts in accord with sessionLength and breakLength.
     this.setState(prevState => 
-      ({ sessionTimeLeft: prevState.sessionLength.toString() + ':00',
-         breakTimeLeft: prevState.breakLength.toString() + ':00' }));
+      ({ sessionTimeLeft: prevState.sessionLength < 10 ?
+          '0' + prevState.sessionLength.toString() + ':00'
+          :
+          prevState.sessionLength.toString() + ':00',
+         breakTimeLeft: prevState.breakLength < 10 ?
+           '0' + prevState.breakLength.toString() + ':00'
+           :
+           prevState.breakLength.toString() + ':00' })
+      );
   }
   
   runTimerSession() {
     let minutes = this.state.sessionTimeLeft.split(':').map(n => Number(n))[0];
     let seconds = this.state.sessionTimeLeft.split(':').map(n => Number(n))[1];
 
-    if (minutes >= 0 || seconds >= 0) {
+    if (minutes >= 0) {
+      // let the ternary operator attack begin!
+      minutes = (seconds === 0) ? minutes - 1 : minutes;
       seconds = (seconds - 1 < 0 ) ? 59 : seconds - 1;
-      console.log(seconds)
-      if (seconds === 0 && minutes > 0) {
-        minutes -= 1;
-      }
-      this.setState({ sessionTimeLeft: [minutes, seconds].join(':')});
+      let secondsString = seconds < 10 ? '0' + seconds.toString() 
+        : seconds.toString();
+      let minutesString = minutes < 10 ? '0' + minutes.toString() 
+        : minutes.toString();
+      let updatedTimeLeft = minutesString + ':' + secondsString;
+      this.setState({ sessionTimeLeft: updatedTimeLeft });
       timer = setTimeout(this.runTimerSession, 1000);
     } else {
       this.setState({ sessionRunning: false,
@@ -105,7 +115,6 @@ class PomodoroClock extends React.Component {
       });
       clearTimeout(timer);
     }
-
   }
 
   stopTimerSession() {
@@ -113,11 +122,11 @@ class PomodoroClock extends React.Component {
     clearTimeout(timer);
   }
 
-  stopTimerBreak() {
+  runTimerBreak() {
     return undefined;
   }
 
-  runTimerBreak() {
+  stopTimerBreak() {
     return undefined;
   }
 
@@ -127,7 +136,7 @@ class PomodoroClock extends React.Component {
                     sessionRunning: false,
                     breakRunning: false,
                     sessionTimeLeft: '25:00',
-                    breakTimeLeft: '5:00'
+                    breakTimeLeft: '05:00'
       });
   }
 
