@@ -1,0 +1,48 @@
+:root {
+  --dark-blue: #252827;
+  --cream: #FFFEE6;
+  --yellow: #F8EA8C;
+}
+body {
+  background-color: var(--dark-blue);
+  color: var(--cream);
+  font-family: 'Concert One', cursive;
+}
+
+p {
+  font-size: 2em;
+}
+
+.btn {
+  background: transparent;
+  color: var(--cream);
+  border: 2px solid var(--cream);
+  border-radius: 10px;
+  font-family: 'Concert One', cursive;
+  text-align: center;
+  font-size: 1em;
+  padding: 5px 5px 5px 5px;
+  outline: none;
+}
+
+.btn:hover {
+  background: white;
+  color: var(--dark-blue);
+}
+
+.btn:active {
+  box-shadow: 0 0 10px var(--cream);
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+}
+
+.container-label-time {
+  font-size: 1.3em;
+  grid-row: 1 / 3;
+}
+
+

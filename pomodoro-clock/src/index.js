@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './index.css';
 
 class PomodoroClock extends React.Component {
   constructor(props) {
@@ -9,7 +10,7 @@ class PomodoroClock extends React.Component {
     this.state = {
       breakLength: 5,
       sessionLength: 25,
-      timerLabel: 'session',
+      timerLabel: 'Session',
       timeLeft: 25 * 60,
       isTimerRunning: false,
       timerInterval: null, 
@@ -28,7 +29,7 @@ class PomodoroClock extends React.Component {
     if(this.state.isTimerRunning) { 
       return null; 
     }
-    this.setState({ timerLabel: 'session' });
+    this.setState({ timerLabel: 'Session' });
     switch(event.target.id) {
       case "break-decrement":
         this.changeTimerDuration('breakLength', this.state.breakLength, 
@@ -80,9 +81,9 @@ class PomodoroClock extends React.Component {
   checkTimer() {
     if(this.state.timeLeft === 0) {
       this.beep.play();
-      let timerLabel = this.state.timerLabel === 'session' ? 
-        'break' : 'session';
-      let timeLeft = this.state.timerLabel === 'session' ? 
+      let timerLabel = this.state.timerLabel === 'Session' ? 
+        'Break' : 'Session';
+      let timeLeft = this.state.timerLabel === 'Session' ? 
         this.state.breakLength * 60 : this.state.sessionLength * 60;
 
       this.setState({
@@ -102,7 +103,7 @@ class PomodoroClock extends React.Component {
     this.setState({
       breakLength: 5,
       sessionLength: 25,
-      timerLabel: 'session',
+      timerLabel: 'Session',
       timeLeft: 25 * 60,
       isTimerRunning: false,
       timerInterval: clearInterval(this.state.timerInterval)
@@ -138,52 +139,59 @@ function Display(props) {
   seconds = seconds < 10 ? '0' + seconds.toString() : seconds;
     
   return (
-    <div>
+    <div className="container">
       <p id="break-label">Break Length</p>
-      <h3 id="break-length">{props.breakLength}</h3>
-      <button id="break-decrement" 
-              type="button" 
-              onClick={props.handleClick}
-      >
-        break decrement
-      </button>
-      <button id="break-increment" 
-              type="button" 
-              className="plus-minus" 
-              onClick={props.handleClick}
-      >
-        break increment 
-      </button>
+      <p id="break-length">{props.breakLength}</p>
      
-      <p id="session-label">session Length</p>
-      <h3 id="session-length">{props.sessionLength}</h3>
-      <button id="session-decrement" 
+      <p id="session-label">Session Length</p>
+      <p id="session-length">{props.sessionLength}</p>
+      
+      <div className="container-label-time">
+        <p id="timer-label">{props.timerLabel}</p>
+        <p id="time-left">{ minutes + ':' + seconds}</p>
+      </div>
+      
+      <button className="btn"
+              id="break-decrement" 
+              type="button" 
+              onClick={props.handleClick}
+      >
+        break <i class="fas fa-minus"></i>
+      </button>
+      <button className="btn"
+              id="break-increment" 
               type="button"  
               onClick={props.handleClick}
       >
-        session decrement
+        break <i class="fas fa-plus"></i>
       </button>
-      <button id="session-increment" 
+      <button className="btn"
+              id="session-decrement" 
               type="button"  
               onClick={props.handleClick}
       >
-        session increment
+        session <i class="fas fa-minus"></i>
       </button>
-      
-      <p id="timer-label">{props.timerLabel}</p>
-      <p id="time-left">{ minutes + ':' + seconds}</p>
-      
-      <button id="start_stop" 
+      <button className="btn"
+              id="session-increment" 
+              type="button"  
+              onClick={props.handleClick}
+      >
+        session <i class="fas fa-plus"></i>
+      </button>
+      <button className="btn"
+              id="start_stop" 
               type="button" 
               onClick={props.countdownTimer}
       >
-        start / stop
+        <i class="fas fa-play"></i><i class="fas fa-stop"></i>
       </button>
-      <button id="reset" 
+      <button className="btn"
+              id="reset" 
               type="button" 
               onClick={props.resetTimer}
       >
-        reset
+        <i class="fas fa-sync-alt"></i>
       </button>
     </div>
   );
