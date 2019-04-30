@@ -134,65 +134,74 @@ class PomodoroClock extends React.Component {
 function Display(props) {
   let minutes = Math.floor(props.timeLeft / 60);
   let seconds = props.timeLeft % 60;
+  let minusIcon = <i className="fas fa-minus"></i>
+  let plusIcon = <i className="fas fa-plus"></i>
+  let startStopIcon = <div>
+                        <i className="fas fa-play"></i>
+                        <i className="fas fa-stop"></i>
+                      </div>
+  let resetIcon = <i class="fas fa-sync-alt"></i>
 
   minutes = minutes < 10 ? '0' + minutes.toString() : minutes;
   seconds = seconds < 10 ? '0' + seconds.toString() : seconds;
     
   return (
-    <div className="container">
-      <p id="break-label">Break Length</p>
-      <p id="break-length">{props.breakLength}</p>
-     
-      <p id="session-label">Session Length</p>
-      <p id="session-length">{props.sessionLength}</p>
-      
-      <div className="container-label-time">
-        <p id="timer-label">{props.timerLabel}</p>
-        <p id="time-left">{ minutes + ':' + seconds}</p>
+    <div>
+      <div className="timeleft">
+          <span id="timer-label">{props.timerLabel}</span>
+          <div id="time-left">{ minutes + ':' + seconds}</div>
       </div>
-      
-      <button className="btn"
-              id="break-decrement" 
-              type="button" 
-              onClick={props.handleClick}
-      >
-        break <i class="fas fa-minus"></i>
-      </button>
-      <button className="btn"
-              id="break-increment" 
-              type="button"  
-              onClick={props.handleClick}
-      >
-        break <i class="fas fa-plus"></i>
-      </button>
-      <button className="btn"
-              id="session-decrement" 
-              type="button"  
-              onClick={props.handleClick}
-      >
-        session <i class="fas fa-minus"></i>
-      </button>
-      <button className="btn"
-              id="session-increment" 
-              type="button"  
-              onClick={props.handleClick}
-      >
-        session <i class="fas fa-plus"></i>
-      </button>
-      <button className="btn"
-              id="start_stop" 
-              type="button" 
-              onClick={props.countdownTimer}
-      >
-        <i class="fas fa-play"></i><i class="fas fa-stop"></i>
-      </button>
-      <button className="btn"
-              id="reset" 
-              type="button" 
-              onClick={props.resetTimer}
-      >
-        <i class="fas fa-sync-alt"></i>
-      </button>
+
+      <div className="container">
+        <div id="break-label">Break Length</div>
+        <div id="break-length">{props.breakLength}</div>
+        <button className="btn"
+                id="break-increment" 
+                type="button"  
+                onClick={props.handleClick}
+        >
+          {plusIcon}
+        </button>
+        <button className="btn"
+                id="break-decrement" 
+                type="button" 
+                onClick={props.handleClick}
+        >
+          {minusIcon}
+        </button>
+        
+        <div id="session-label">Session Length</div>
+        <div id="session-length">{props.sessionLength}</div>
+        <button className="btn"
+                id="session-increment" 
+                type="button"  
+                onClick={props.handleClick}
+        >
+          {plusIcon}
+        </button>
+        <button className="btn"
+                id="session-decrement" 
+                type="button"  
+                onClick={props.handleClick}
+        >
+          {minusIcon}
+        </button>
+        <button className="btn"
+                id="start_stop" 
+                type="button" 
+                onClick={props.countdownTimer}
+        >
+          {startStopIcon}
+        </button>
+        <button className="btn"
+                id="reset" 
+                type="button" 
+                onClick={props.resetTimer}
+        >
+          {resetIcon}
+        </button>
+
+      </div>
     </div>
   );
 
