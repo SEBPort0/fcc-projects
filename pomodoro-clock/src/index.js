@@ -126,6 +126,7 @@ class PomodoroClock extends React.Component {
                src={this.state.audioUrl}
                type="audio/mpeg" 
         />
+        <Signature />
       </div>
     );
   }
@@ -204,9 +205,17 @@ function Display(props) {
       </div>
     </div>
   );
-
 }
 
+function Signature(props) {
+  return (
+    <footer className='sebport0-signature'>
+        By <i className='fab fa-github' />
+      <a href='https://github.com/sebport0' target='_blank'>
+        sebport0
+      </a>
+    </footer>
+  
 
 //======================================================================
 
